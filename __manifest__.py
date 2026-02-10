@@ -21,6 +21,7 @@
         'security/record_rules.xml',
         'data/approval_category_data.xml',
         'views/hr_resignation_views.xml',
+        'reports/hr_clearance_report.xml',
         'views/hr_clearance_views.xml',
         'views/hr_employee_views.xml',
         'data/clearance_checklist_data.xml',
