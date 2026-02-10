@@ -122,14 +122,23 @@ class HrClearanceLine(models.Model):
     completion_date = fields.Date(string='Completion Date')
 
     def action_approve(self):
-        if self.responsible_user_id != self.env.user and not self.env.user.has_group('hr.group_hr_manager'):
-             raise UserError(_("Only the responsible user or HR Manager can approve this item."))
         self.write({
             'status': 'completed',
             'completion_date': fields.Date.today()
         })
 
     def write(self, vals):
+        if 'status' in vals and vals['status'] == 'completed':
+            for line in self:
+                if line.responsible_user_id and line.responsible_user_id != self.env.user:
+                    raise UserError(_("Only the assigned user (%s) can approve this item.") % line.responsible_user_id.name)
+                if not line.responsible_user_id and not self.env.user.has_group('hr.group_hr_manager'):
+                    raise UserError(_("Only the HR Manager can approve items with no responsible user."))
+                
+                # Log in the chatter
+                if line.status != 'completed':
+                    line.clearance_id.message_post(body=_("Checklist item <b>%s</b> confirmed by %s.") % (line.name, self.env.user.name))
+
         res = super(HrClearanceLine, self).write(vals)
         if 'status' in vals:
             for line in self:
