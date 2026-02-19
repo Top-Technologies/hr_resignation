@@ -58,7 +58,7 @@
         <field name="arch" type="xml">
             <form string="Clearance" create="0">
                 <header>
-                    <button string="Print Report" type="action" name="%(hr_resignation.action_report_hr_clearance)d" icon="fa-print"/>
+                    <button string="Print Report" type="action" name="%(action_report_hr_clearance)d" icon="fa-print"/>
                     <field name="state" widget="statusbar"/>
                 </header>
                 <sheet>
