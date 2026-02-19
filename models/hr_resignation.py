@@ -45,7 +45,7 @@ class HrResignation(models.Model):
         if self.approval_request_id:
              return
 
-        category = self.env.ref('hr_resignation.approval_category_resignation', raise_if_not_found=False)
+        category = self.env.ref('approval_category_resignation', raise_if_not_found=False)
         if not category:
              category = self.env['approval.category'].search([('name', '=', 'Resignation')], limit=1)
         
@@ -57,6 +57,8 @@ class HrResignation(models.Model):
                 'request_status': 'new',
                 'date': self.resignation_date,
                 'reason': self.reason,
+                'res_model': self._name,
+                'res_id': self.id,
             })
             request.action_confirm() 
             self.write({'state': 'submitted', 'approval_request_id': request.id})
@@ -67,8 +69,18 @@ class HrResignation(models.Model):
 
     def action_approve(self):
         """Called when the linked Approval Request is fully approved."""
-        self.write({'state': 'approved_hr'}) # We keep 'approved_hr' state as 'Final Approved' for now to match view
+        if self.state == 'approved_hr':
+             return
+        self.write({'state': 'approved_hr'})
         self.create_clearance_request()
+
+    def _on_approval_approved(self):
+        """Integration with approvals_community or tier_validation."""
+        self.action_approve()
+
+    def _on_approval_rejected(self):
+        """Integration with approvals_community or tier_validation."""
+        self.action_reject()
 
     def action_reject(self):
         """Called when Local Approval Request is refused."""

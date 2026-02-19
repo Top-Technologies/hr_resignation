@@ -3,6 +3,9 @@ from odoo import models, fields, api, _
 class ApprovalRequest(models.Model):
     _inherit = 'approval.request'
 
+    res_model = fields.Char(string="Resource Model", index=True)
+    res_id = fields.Many2oneReference(string="Resource ID", model_field='res_model', index=True)
+
     def action_approve(self, approver=None):
         res = super(ApprovalRequest, self).action_approve(approver)
         # Check if this request is linked to a resignation
@@ -14,10 +17,15 @@ class ApprovalRequest(models.Model):
         # Search is fine since resignation volume is low.
         
         for request in self:
+            request.flush_model(['request_status'])
             resignation = self.env['hr.resignation'].search([('approval_request_id', '=', request.id)], limit=1)
+            # Fallback to res_model/res_id if set
+            if not resignation and request.res_model == 'hr.resignation' and request.res_id:
+                resignation = self.env['hr.resignation'].browse(request.res_id)
+
             if resignation:
                 if request.request_status == 'approved':
-                    # Final Approval (Assumed to be HR or final step)
+                    # Final Approval
                     resignation.action_approve()
                 else:
                     # Check for intermediate Manager approval
