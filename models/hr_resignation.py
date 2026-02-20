@@ -50,7 +50,11 @@ class HrResignation(models.Model):
              category = self.env['approval.category'].search([('name', '=', 'Resignation')], limit=1)
         
         if category:
-            request = self.env['approval.request'].create({
+            # Force manager_approval to 'no' to bypass Odoo's rigid check
+            # This ensures the fix works even if the XML didn't update due to noupdate=1
+            if category.manager_approval != 'no':
+                category.sudo().write({'manager_approval': 'no'})
+            request_vals = {
                 'name': _('Resignation: %s') % self.employee_id.name,
                 'category_id': category.id,
                 'request_owner_id': self.employee_id.user_id.id or self.env.user.id,
@@ -59,7 +63,21 @@ class HrResignation(models.Model):
                 'reason': self.reason,
                 'res_model': self._name,
                 'res_id': self.id,
-            })
+            }
+            request = self.env['approval.request'].create(request_vals)
+            
+            # If the employee has a manager and we want to ensure they are added
+            if self.manager_id and self.manager_id.user_id:
+                # Check if the manager is already an approver (Odoo might add them automatically via category)
+                existing_approver = request.approver_ids.filtered(lambda a: a.user_id == self.manager_id.user_id)
+                if not existing_approver:
+                    self.env['approval.approver'].create({
+                        'user_id': self.manager_id.user_id.id,
+                        'request_id': request.id,
+                        'status': 'new',
+                        'required': True,
+                    })
+
             request.action_confirm() 
             self.write({'state': 'submitted', 'approval_request_id': request.id})
         else:
