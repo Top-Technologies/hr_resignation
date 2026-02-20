@@ -50,10 +50,11 @@ class HrResignation(models.Model):
              category = self.env['approval.category'].search([('name', '=', 'Resignation')], limit=1)
         
         if category:
-            # Force manager_approval to 'no' to bypass Odoo's rigid check
-            # This ensures the fix works even if the XML didn't update due to noupdate=1
-            if category.manager_approval != 'no':
-                category.sudo().write({'manager_approval': 'no'})
+            # Force manager_approval to False to bypass Odoo's rigid check
+            # Using SQL because the record might be corrupted with 'no', and a standard write() fails validation
+            if category.manager_approval:
+                self.env.cr.execute("UPDATE approval_category SET manager_approval = NULL WHERE id = %s", (category.id,))
+                category.invalidate_recordset(['manager_approval'])
             request_vals = {
                 'name': _('Resignation: %s') % self.employee_id.name,
                 'category_id': category.id,
