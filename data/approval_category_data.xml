@@ -7,7 +7,7 @@
             <field name="sequence">10</field>
             <field name="approval_minimum">1</field>
             <field name="invalid_minimum">1</field>
-            <field name="manager_approval">no</field>
+            <field name="manager_approval" eval="False"/>
             <!-- Important: Do not require unnecessary fields to simplify flow -->
             <field name="has_date">required</field>
             <field name="has_period">no</field>
