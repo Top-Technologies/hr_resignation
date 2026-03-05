@@ -99,6 +99,20 @@ class HrClearance(models.Model):
             
         self.write({'checklist_ids': lines})
 
+        # Notify responsible users via activities
+        responsible_user_ids = set()
+        for line_cmd in lines:
+            if line_cmd[2].get('responsible_user_id'):
+                responsible_user_ids.add(line_cmd[2]['responsible_user_id'])
+        
+        for user_id in responsible_user_ids:
+            self.activity_schedule(
+                'mail.mail_activity_data_todo',
+                summary=_('Clearance Checklist: %s') % self.employee_id.name,
+                note=_('Please review and complete the clearance checklist items assigned to you for %s.') % self.employee_id.name,
+                user_id=user_id
+            )
+
 class HrClearanceListType(models.Model):
     _name = 'hr.clearance.checklist.type'
     _description = 'Clearance Checklist Type'
