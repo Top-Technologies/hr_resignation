@@ -26,6 +26,11 @@
         'views/hr_employee_views.xml',
         'data/clearance_checklist_data.xml',
     ],
+    'assets': {
+        'web.assets_backend': [
+            'hr_resignation/static/src/js/notification_sound.js',
+        ],
+    },
     'installable': True,
     'application': True,
     'license': 'LGPL-3',
