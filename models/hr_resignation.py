@@ -78,6 +78,26 @@ class HrResignation(models.Model):
                         'status': 'new',
                         'required': True,
                     })
+                    
+            # Fallback: If no approver was added (e.g., employee has no manager), add an HR Manager
+            if not request.approver_ids:
+                # Find all users in the HR Manager group
+                hr_managers = self.env.ref('hr.group_hr_manager').users
+                if hr_managers:
+                    self.env['approval.approver'].create({
+                        'user_id': hr_managers[0].id,
+                        'request_id': request.id,
+                        'status': 'new',
+                        'required': True,
+                    })
+                else:
+                    # Ultimate fallback to Administrator if no HR Managers are configured
+                    self.env['approval.approver'].create({
+                        'user_id': self.env.ref('base.user_admin').id,
+                        'request_id': request.id,
+                        'status': 'new',
+                        'required': True,
+                    })
 
             request.action_confirm() 
             self.write({'state': 'submitted', 'approval_request_id': request.id})
@@ -90,20 +110,20 @@ class HrResignation(models.Model):
         """Called when the linked Approval Request is fully approved."""
         if self.state == 'approved_hr':
              return
-        self.write({'state': 'approved_hr'})
-        self.create_clearance_request()
+        self.sudo().write({'state': 'approved_hr'})
+        self.sudo().create_clearance_request()
 
     def _on_approval_approved(self):
         """Integration with approvals_community or tier_validation."""
-        self.action_approve()
+        self.sudo().action_approve()
 
     def _on_approval_rejected(self):
         """Integration with approvals_community or tier_validation."""
-        self.action_reject()
+        self.sudo().action_reject()
 
     def action_reject(self):
         """Called when Local Approval Request is refused."""
-        self.write({'state': 'rejected'})
+        self.sudo().write({'state': 'rejected'})
 
     def action_cancel(self):
         self.write({'state': 'cancel'})
@@ -112,10 +132,10 @@ class HrResignation(models.Model):
         self.write({'state': 'draft'})
 
     def create_clearance_request(self):
-        if not self.env['hr.clearance'].search([('resignation_id', '=', self.id)]):
-            clearance = self.env['hr.clearance'].create({
+        if not self.env['hr.clearance'].sudo().search([('resignation_id', '=', self.id)]):
+            clearance = self.env['hr.clearance'].sudo().create({
                 'employee_id': self.employee_id.id,
                 'resignation_id': self.id,
             })
-            clearance._oncreate_populate_checklist()
+            clearance.sudo()._oncreate_populate_checklist()
             return clearance
