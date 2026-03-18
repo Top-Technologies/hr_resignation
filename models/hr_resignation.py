@@ -39,12 +39,15 @@ class HrResignation(models.Model):
                 rec.notice_period = 0
 
     approval_request_id = fields.Many2one('approval.request', string='Approval Request', readonly=True)
+<<<<<<< HEAD
     clearance_business_unit_ids = fields.Many2many(
         "hr.clearance.checklist.type",
         string="Business Units",
         required=True,
         tracking=True,
     )
+=======
+>>>>>>> origin/main
 
     def action_submit(self):
         self.ensure_one()
@@ -142,7 +145,10 @@ class HrResignation(models.Model):
             clearance = self.env['hr.clearance'].sudo().create({
                 'employee_id': self.employee_id.id,
                 'resignation_id': self.id,
+<<<<<<< HEAD
                 'checklist_type_ids': [(6, 0, self.clearance_business_unit_ids.ids)],
+=======
+>>>>>>> origin/main
             })
             clearance.sudo()._oncreate_populate_checklist()
             return clearance
