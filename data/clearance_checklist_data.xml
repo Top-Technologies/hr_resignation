@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="checklist_type_it" model="hr.clearance.checklist.type">
+            <field name="name">IT Dept (Hardware, Access)</field>
+            <field name="business_unit_name">IT</field>
+        </record>
+        <record id="checklist_type_finance" model="hr.clearance.checklist.type">
+            <field name="name">Finance (Loans, Expenses)</field>
+            <field name="business_unit_name">Finance</field>
+        </record>
+        <record id="checklist_type_admin" model="hr.clearance.checklist.type">
+            <field name="name">Admin (ID Card, Keys)</field>
+            <field name="business_unit_name">Admin</field>
+        </record>
+        <record id="checklist_type_hr" model="hr.clearance.checklist.type">
+            <field name="name">HR (Files, Exit Interview)</field>
+            <field name="business_unit_name">HR</field>
+        </record>
+        <record id="checklist_type_assets" model="hr.clearance.checklist.type">
+            <field name="name">Asset Return</field>
+            <field name="business_unit_name">Assets</field>
+        </record>
+    </data>
+</odoo>

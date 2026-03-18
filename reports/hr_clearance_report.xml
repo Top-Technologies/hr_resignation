@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="paperformat_hr_clearance" model="report.paperformat">
+        <field name="name">Clearance Report Paper Format</field>
+        <field name="default" eval="True"/>
+        <field name="format">A4</field>
+        <field name="page_height">0</field>
+        <field name="page_width">0</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">5</field>
+        <field name="margin_bottom">10</field>
+        <field name="margin_left">5</field>
+        <field name="margin_right">5</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">0</field>
+        <field name="dpi">90</field>
+    </record>
+
+    <record id="action_report_hr_clearance" model="ir.actions.report">
+        <field name="name">Clearance Checklist Report</field>
+        <field name="model">hr.clearance</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">hr_resignation.report_hr_clearance</field>
+        <field name="report_file">hr_resignation.report_hr_clearance</field>
+        <field name="print_report_name">'Clearance Report - %s' % (object.employee_id.name)</field>
+        <field name="binding_model_id" ref="model_hr_clearance"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="paperformat_hr_clearance"/>
+    </record>
+
+    <template id="report_hr_clearance">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.basic_layout">
+                    <div class="page">
+                        <div class="text-center">
+                            <img src="/hr_resignation/static/img/clearance_header.png" style="max-height: 100px; width: auto;"/>
+                        </div>
+                        <div class="text-center mt-2">
+                            <h2>Employee Clearance Checklist Report</h2>
+                        </div>
+                        <br/>
+                        
+                        <!-- 2. Section: Employee Information -->
+                        <div class="row mt-4">
+                            <div class="col-6">
+                                <strong>Employee Name:</strong> <span t-field="o.employee_id.name"/>
+                            </div>
+                            <div class="col-6">
+                                <strong>Clearance Date:</strong> 
+                                <span t-if="o.resignation_id.last_working_day" t-field="o.resignation_id.last_working_day"/>
+                                <span t-else="" t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d')"/>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                             <div class="col-6">
+                                <strong>Department:</strong> <span t-field="o.employee_id.department_id.name"/>
+                            </div>
+                            <div class="col-6">
+                                <strong>Position:</strong> <span t-field="o.employee_id.job_id.name"/>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-12">
+                                <strong>Reason for Leaving:</strong> <span t-field="o.resignation_id.reason"/>
+                            </div>
+                        </div>
+
+                        <br/>
+
+                        <!-- 3. Section: Clearance Checklist -->
+                        <div class="mt-4">
+                            <h4>Clearance Checklist</h4>
+                            <table class="table table-sm table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Item / Department</th>
+                                        <th>Responsible</th>
+                                        <th>Status</th>
+                                        <th>Remarks</th>
+                                        <th>Completion Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="o.checklist_ids" t-as="line">
+                                        <td><span t-field="line.name"/></td>
+                                        <td><span t-field="line.responsible_user_id.name"/></td>
+                                        <td>
+                                            <span t-if="line.status == 'completed'" class="text-success">Done</span>
+                                            <span t-elif="line.status == 'pending'" class="text-warning">Pending</span>
+                                            <span t-else="" class="text-danger">Blocked</span>
+                                        </td>
+                                        <td><span t-field="line.remarks"/></td>
+                                        <td><span t-field="line.completion_date"/></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <br/>
+                        
+                         <!-- 4. Section: Confirmation Notes (in Amharic) -->
+                        <div class="mt-4" style="font-family: 'Nyala', 'Abyssinica SIL', sans-serif;">
+                            <ul>
+                                <li class="mb-2">ይህ ክሊራንስ ሰራተኛዉ ከድርጅቱ የወሰደዉን ንብረት ወይም ገንዘብ ሁሉ መመለሱን ወይም አለመዉሰዱን ያረጋግጣል፡፡</li>
+                                <li class="mb-2">This clearance certifies that the employee has either returned all property or money taken from the organization, or confirms that none was taken.</li>
+                                <li class="mb-2">ከዚህ በላይ የተዘረዘሩት የስራ ክፍል ኃላፊዎች ከሰራተኛዉ የሚፈለግ የድርጅቱ ገንዘብና ንብረት ስለመኖሩ አለመኖሩ ማረጋገጫ በ3 ኮፒ ተሞልቶ ከተፈረመ በኃላ 1ኛ ኮፒ ለሰዉ ሀይል፤ 2ኛ ኮፒ ለሰራተኛዉ፤ 3ኛዉ ኮፒ ለሒሳብ ክፍል ከመጠየቂያ ጋር ወይም እንደ አስፈላጊነቱ በአባሪ ደብዳቤ ይላካል፡፡</li>
+                                <li class="mb-2">The department heads listed above certify whether or not the employee has any outstanding organizational property or financial obligations. The clearance form is completed in three copies: the first copy for Human Resources, the second copy for the employee, and the third copy for the Finance Department, together with a requisition or as required by an official letter.</li>
+                                <li class="mb-2">ይህ ክሊራንስ ተሞልቶ ካለቀ በኃላ በሶስቱም የክሊራንስ ቅጂ ላይ የድርጅቱ ማህተም ያርፍበታል፡፡ የድርጅቱ ሕጋ ማህተም ካላረፈበት ዋጋ ሊኖረዉ አይችልም፡፡</li>
+                                <li class="mb-2">Once the clearance is fully completed, all three copies must bear the organization’s official seal. Without the legal seal of the organization, the clearance has no validity.</li>
+                                <li class="mb-2">ይህ ክሊራንስ ቅጽ ተፈርሞ ከተሰጠ በኃላ በሰራተኛዉ የሚፈለግ እዳ፤ ያልተመለሰ ንብረት ወይም ያልተወራረደ ሂሳብ መኖሩ በሂደት ከታወቀ ድርጅቱ በማንኛዉም ጊዜ ሰራተኛዉን የመጠየቅ መብት አለዉ፡፡</li>
+                                <li class="mb-2">After this clearance form has been signed and issued, if it is later discovered that the employee has outstanding debts, unreturned property, or unsettled accounts, the organization retains the right to demand repayment or recovery from the employee at any time.</li>
+                            </ul>
+                        </div>
+
+                        <br/>
+                        <br/>
+
+                         <!-- 5. Section: Final Confirmation -->
+                        <div class="row mt-5">
+                            <div class="col-6">
+                                <p><strong>HR Name:</strong> ______________________</p>
+                                <p class="mt-4"><strong>Date:</strong> ______________________</p>
+                                <p class="mt-4"><strong>Signature:</strong> ______________________</p>
+                            </div>
+                            <div class="col-6 text-right">
+                                <p><strong>Employee Name:</strong> <span t-field="o.employee_id.name"/></p>
+                                <p class="mt-4"><strong>Date:</strong> ______________________</p>
+                                <p class="mt-4"><strong>Signature:</strong> ______________________</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>
