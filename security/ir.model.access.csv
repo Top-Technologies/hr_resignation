@@ -1,0 +1,12 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_hr_resignation_user,hr.resignation.user,model_hr_resignation,base.group_user,1,1,1,0
+access_hr_resignation_manager,hr.resignation.manager,model_hr_resignation,hr.group_hr_user,1,1,1,1
+access_hr_resignation_admin,hr.resignation.admin,model_hr_resignation,hr.group_hr_manager,1,1,1,1
+access_hr_clearance_user,hr.clearance.user,model_hr_clearance,base.group_user,1,1,1,0
+access_hr_clearance_manager,hr.clearance.manager,model_hr_clearance,hr.group_hr_manager,1,1,1,1
+access_hr_clearance_line_user,hr.clearance.line.user,model_hr_clearance_line,base.group_user,1,1,1,0
+access_hr_clearance_line_manager,hr.clearance.line.manager,model_hr_clearance_line,hr.group_hr_manager,1,1,1,1
+access_hr_clearance_type_user,hr.clearance.checklist.type.user,model_hr_clearance_checklist_type,base.group_user,1,1,1,1
+access_hr_clearance_type_manager,hr.clearance.checklist.type.manager,model_hr_clearance_checklist_type,hr.group_hr_manager,1,1,1,1
+access_hr_clearance_type_line_user,hr.clearance.checklist.type.line.user,model_hr_clearance_checklist_type_line,base.group_user,1,1,1,1
+access_hr_clearance_type_line_manager,hr.clearance.checklist.type.line.manager,model_hr_clearance_checklist_type_line,hr.group_hr_manager,1,1,1,1
