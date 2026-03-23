@@ -3,9 +3,9 @@
     <data noupdate="1">
         <!-- Employee can see their own resignation -->
         <record id="rule_hr_resignation_employee" model="ir.rule">
-            <field name="name">Resignation: Employee see own</field>
+            <field name="name">Resignation: All users see all</field>
             <field name="model_id" ref="model_hr_resignation"/>
-            <field name="domain_force">[('employee_id.user_id', '=', user.id)]</field>
+            <field name="domain_force">[(1, '=', 1)]</field>
             <field name="groups" eval="[(4, ref('base.group_user'))]"/>
         </record>
 
@@ -27,9 +27,9 @@
 
         <!-- Clearance Rules -->
         <record id="rule_hr_clearance_employee" model="ir.rule">
-            <field name="name">Clearance: Employee see own</field>
+            <field name="name">Clearance: All users see all</field>
             <field name="model_id" ref="model_hr_clearance"/>
-            <field name="domain_force">[('employee_id.user_id', '=', user.id)]</field>
+            <field name="domain_force">[(1, '=', 1)]</field>
             <field name="groups" eval="[(4, ref('base.group_user'))]"/>
         </record>
 
