@@ -3,7 +3,6 @@
     <data noupdate="1">
         <record id="checklist_type_it" model="hr.clearance.checklist.type">
             <field name="name">IT Dept (Hardware, Access)</field>
-<<<<<<< HEAD
             <field name="business_unit_name">IT</field>
         </record>
         <record id="checklist_type_finance" model="hr.clearance.checklist.type">
@@ -21,20 +20,6 @@
         <record id="checklist_type_assets" model="hr.clearance.checklist.type">
             <field name="name">Asset Return</field>
             <field name="business_unit_name">Assets</field>
-=======
-        </record>
-        <record id="checklist_type_finance" model="hr.clearance.checklist.type">
-            <field name="name">Finance (Loans, Expenses)</field>
-        </record>
-        <record id="checklist_type_admin" model="hr.clearance.checklist.type">
-            <field name="name">Admin (ID Card, Keys)</field>
-        </record>
-        <record id="checklist_type_hr" model="hr.clearance.checklist.type">
-            <field name="name">HR (Files, Exit Interview)</field>
-        </record>
-        <record id="checklist_type_assets" model="hr.clearance.checklist.type">
-            <field name="name">Asset Return</field>
->>>>>>> origin/main
         </record>
     </data>
 </odoo>
