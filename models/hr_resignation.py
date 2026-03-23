@@ -41,7 +41,7 @@ class HrResignation(models.Model):
     approval_request_id = fields.Many2one('approval.request', string='Approval Request', readonly=True)
     clearance_business_unit_ids = fields.Many2many(
         "hr.clearance.checklist.type",
-        string="Business Units",
+        string="Branch",
         required=True,
         tracking=True,
     )
