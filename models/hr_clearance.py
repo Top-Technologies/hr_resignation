@@ -11,7 +11,7 @@ class HrClearance(models.Model):
     resignation_id = fields.Many2one('hr.resignation', string='Resignation Reference')
     checklist_type_ids = fields.Many2many(
         "hr.clearance.checklist.type",
-        string="Business Units",
+        string="Branch",
     )
     checklist_ids = fields.One2many('hr.clearance.line', 'clearance_id', string='Checklists')
     
@@ -60,7 +60,7 @@ class HrClearance(models.Model):
         self.message_post(body=_("Employee archived and marked as exited associated with this clearance."))
         
     def _oncreate_populate_checklist(self):
-        # Use selected business units (from resignation) if available; otherwise fallback to all
+        # Use selected branches (from resignation) if available; otherwise fallback to all
         checklist_types = self.checklist_type_ids or self.env['hr.clearance.checklist.type'].search([])
         unique_lines = {}  # Key: (name, responsible_user_id), Value: vals dict
         
@@ -145,9 +145,9 @@ class HrClearanceListType(models.Model):
     _rec_name = "business_unit_name"
 
     # Keep legacy "name" for backward compatibility (existing data/XML),
-    # but use Business Unit as the primary field in the UI.
+    # but use Branch as the primary field in the UI.
     name = fields.Char(string='Name')
-    business_unit_name = fields.Char(string="Business Unit", required=True)
+    business_unit_name = fields.Char(string="Branch", required=True)
     tag_ids = fields.Many2many(
         "hr.employee.category",
         "hr_clearance_checklist_type_hr_employee_category_rel",
