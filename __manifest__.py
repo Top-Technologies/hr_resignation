@@ -24,10 +24,7 @@
         'reports/hr_clearance_report.xml',
         'views/hr_clearance_views.xml',
         'views/hr_employee_views.xml',
-<<<<<<< HEAD
-=======
         'data/clearance_checklist_data.xml',
->>>>>>> origin/main
     ],
     'assets': {
         'web.assets_backend': [
