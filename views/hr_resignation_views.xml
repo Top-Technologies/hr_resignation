@@ -72,12 +72,9 @@
                         </group>
                     </group>
                     <group>
-<<<<<<< HEAD
                         <field name="clearance_business_unit_ids" widget="many2many_tags" options="{'no_create': True}" readonly="state != 'draft'"/>
                     </group>
                     <group>
-=======
->>>>>>> origin/main
                         <field name="reason" readonly="state != 'draft'"/>
                         <field name="remarks" readonly="state != 'draft'"/>
                     </group>
