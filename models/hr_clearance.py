@@ -9,13 +9,10 @@ class HrClearance(models.Model):
 
     employee_id = fields.Many2one('hr.employee', string='Employee', required=True)
     resignation_id = fields.Many2one('hr.resignation', string='Resignation Reference')
-<<<<<<< HEAD
     checklist_type_ids = fields.Many2many(
         "hr.clearance.checklist.type",
         string="Business Units",
     )
-=======
->>>>>>> origin/main
     checklist_ids = fields.One2many('hr.clearance.line', 'clearance_id', string='Checklists')
     
     state = fields.Selection([
@@ -63,7 +60,6 @@ class HrClearance(models.Model):
         self.message_post(body=_("Employee archived and marked as exited associated with this clearance."))
         
     def _oncreate_populate_checklist(self):
-<<<<<<< HEAD
         # Use selected business units (from resignation) if available; otherwise fallback to all
         checklist_types = self.checklist_type_ids or self.env['hr.clearance.checklist.type'].search([])
         unique_lines = {}  # Key: (name, responsible_user_id), Value: vals dict
@@ -74,16 +70,6 @@ class HrClearance(models.Model):
         
         for c_type in checklist_types:
             # Fallback logic for Responsible User (type level)
-=======
-        # Fetch configured checklist types
-        checklist_types = self.env['hr.clearance.checklist.type'].search([])
-        lines = []
-        import logging
-        _logger = logging.getLogger(__name__)
-        _logger.info("Antigravity: Generating checklist lines...")
-        for c_type in checklist_types:
-            # Fallback logic for Responsible User
->>>>>>> origin/main
             responsible = c_type.responsible_user_id
             if not responsible:
                 # Try Employee's Manager
@@ -93,18 +79,13 @@ class HrClearance(models.Model):
                 else:
                     responsible = self.env.user
                 
-<<<<<<< HEAD
                 # Ultimate Fallback: If for some reason env.user is failing or not set, use Administrator
-=======
-                # Ultimate Fallback: If for some reasonenv.user is failing or not set, use Administrator
->>>>>>> origin/main
                 if not responsible:
                     responsible = self.env.ref('base.user_admin', raise_if_not_found=False)
                 if not responsible:
                      # Very unlikely, but just in case
                      responsible = self.env['res.users'].search([], limit=1)
 
-<<<<<<< HEAD
             type_lines = c_type.line_ids.filtered(lambda l: l.active)
             if type_lines:
                 for t_line in type_lines.sorted(lambda r: (r.sequence, r.id)):
@@ -127,19 +108,10 @@ class HrClearance(models.Model):
                         'status': 'pending',
                         'remarks': '',
                     }
-=======
-            lines.append((0, 0, {
-                'name': c_type.name,
-                'responsible_user_id': responsible.id,
-                'status': 'pending',
-                'remarks': '',
-            }))
->>>>>>> origin/main
         
         # Check for assets and add a specific Item if assets exist
         assets = self.env['maintenance.equipment'].search([('employee_id', '=', self.employee_id.id)])
         if assets:
-<<<<<<< HEAD
             asset_line_name = _('Return Assets: %s') % ", ".join(assets.mapped('name')[:3])
             key = (asset_line_name, self.env.user.id)
             if key not in unique_lines:
@@ -151,15 +123,6 @@ class HrClearance(models.Model):
                 }
             
         lines = [(0, 0, vals) for vals in unique_lines.values()]
-=======
-             lines.append((0, 0, {
-                'name': _('Return Assets: %s') % ", ".join(assets.mapped('name')[:3]), # Limit names
-                'responsible_user_id': self.env.user.id, # Should be Asset Manager
-                'status': 'pending',
-                'remarks': 'Auto-detected assets',
-            }))
-            
->>>>>>> origin/main
         self.write({'checklist_ids': lines})
 
         # Notify responsible users via activities
@@ -179,7 +142,6 @@ class HrClearance(models.Model):
 class HrClearanceListType(models.Model):
     _name = 'hr.clearance.checklist.type'
     _description = 'Clearance Checklist Type'
-<<<<<<< HEAD
     _rec_name = "business_unit_name"
 
     # Keep legacy "name" for backward compatibility (existing data/XML),
@@ -233,22 +195,13 @@ class HrClearanceListTypeLine(models.Model):
         domain=[("share", "=", False)],
     )
     active = fields.Boolean(default=True)
-=======
-
-    name = fields.Char(string='Name', required=True)
-    responsible_user_id = fields.Many2one('res.users', string='Default Responsible')
->>>>>>> origin/main
 
 class HrClearanceLine(models.Model):
     _name = 'hr.clearance.line'
     _description = 'Clearance Checklist Line'
 
     clearance_id = fields.Many2one('hr.clearance', string='Clearance')
-<<<<<<< HEAD
     name = fields.Char(string='Departments', required=True)
-=======
-    name = fields.Char(string='Item', required=True)
->>>>>>> origin/main
     responsible_user_id = fields.Many2one('res.users', string='Responsible')
     status = fields.Selection([
         ('pending', 'Pending'),
