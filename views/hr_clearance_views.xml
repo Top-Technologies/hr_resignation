@@ -129,5 +129,5 @@
 
     <menuitem id="menu_hr_clearance_root" name="Clearances" parent="hr.menu_hr_root" sequence="21"/>
     <menuitem id="menu_hr_clearance_requests" name="Clearance Requests" parent="menu_hr_clearance_root" action="action_hr_clearance" sequence="1"/>
-    <menuitem id="menu_hr_clearance_configuration" name="Checklist Configuration" parent="menu_hr_clearance_root" action="action_hr_clearance_checklist_type" sequence="2"/>
+    <menuitem id="menu_hr_clearance_configuration" name="Checklist Configuration" parent="hr.menu_human_resources_configuration" action="action_hr_clearance_checklist_type" sequence="10"/>
 </odoo>
