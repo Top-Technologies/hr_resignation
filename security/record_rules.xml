@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
-        <!-- Employee can see their own resignation -->
+        <!-- Employee can see their own resignation - cross company -->
         <record id="rule_hr_resignation_employee" model="ir.rule">
             <field name="name">Resignation: All users see all</field>
             <field name="model_id" ref="model_hr_resignation"/>
@@ -9,7 +9,7 @@
             <field name="groups" eval="[(4, ref('base.group_user'))]"/>
         </record>
 
-        <!-- Manager can see their subordinates' resignations -->
+        <!-- Manager can see their subordinates' resignations - cross company -->
         <record id="rule_hr_resignation_manager" model="ir.rule">
             <field name="name">Resignation: Manager see subordinates</field>
             <field name="model_id" ref="model_hr_resignation"/>
@@ -17,7 +17,7 @@
             <field name="groups" eval="[(4, ref('group_resignation_manager'))]"/>
         </record>
 
-        <!-- HR Manager see all -->
+        <!-- HR Manager see all - cross company -->
         <record id="rule_hr_resignation_all" model="ir.rule">
             <field name="name">Resignation: HR Manager see all</field>
             <field name="model_id" ref="model_hr_resignation"/>
@@ -25,7 +25,7 @@
             <field name="groups" eval="[(4, ref('hr.group_hr_manager'))]"/>
         </record>
 
-        <!-- Clearance Rules -->
+        <!-- Clearance Rules - cross company -->
         <record id="rule_hr_clearance_employee" model="ir.rule">
             <field name="name">Clearance: All users see all</field>
             <field name="model_id" ref="model_hr_clearance"/>
@@ -40,7 +40,7 @@
             <field name="groups" eval="[(4, ref('hr.group_hr_manager'))]"/>
         </record>
 
-        <!-- Checklist Approver Rule -->
+        <!-- Checklist Approver Rule - cross company -->
         <record id="rule_hr_clearance_checklist_approver" model="ir.rule">
             <field name="name">Clearance: Checklist Approver</field>
             <field name="model_id" ref="model_hr_clearance"/>
