@@ -8,6 +8,8 @@ class HrResignation(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _rec_name = 'employee_id'
 
+    company_id = fields.Many2one('res.company', string='Company',
+        default=lambda self: self.env.company)
     employee_id = fields.Many2one('hr.employee', string='Employee', required=True, default=lambda self: self.env.user.employee_id)
     department_id = fields.Many2one('hr.department', string='Department', related='employee_id.department_id', store=True)
     job_id = fields.Many2one('hr.job', string='Job Position', related='employee_id.job_id', store=True)
@@ -54,13 +56,15 @@ class HrResignation(models.Model):
         category = self.env.ref('approval_category_resignation', raise_if_not_found=False)
         if not category:
              category = self.env['approval.category'].search([('name', '=', 'Resignation')], limit=1)
-        
+
         if category:
             # Force manager_approval to False to bypass Odoo's rigid check
             # Using SQL because the record might be corrupted with 'no', and a standard write() fails validation
             if category.manager_approval:
                 self.env.cr.execute("UPDATE approval_category SET manager_approval = NULL WHERE id = %s", (category.id,))
                 category.invalidate_recordset(['manager_approval'])
+
+            # Build request values - let approval request default company to allow cross-company visibility
             request_vals = {
                 'name': _('Resignation: %s') % self.employee_id.name,
                 'category_id': category.id,
@@ -72,7 +76,7 @@ class HrResignation(models.Model):
                 'res_id': self.id,
             }
             request = self.env['approval.request'].create(request_vals)
-            
+
             # If the employee has a manager and we want to ensure they are added
             if self.manager_id and self.manager_id.user_id:
                 # Check if the manager is already an approver (Odoo might add them automatically via category)
@@ -84,11 +88,14 @@ class HrResignation(models.Model):
                         'status': 'new',
                         'required': True,
                     })
-                    
+
             # Fallback: If no approver was added (e.g., employee has no manager), add an HR Manager
+            # Search across ALL companies for HR managers
             if not request.approver_ids:
-                # Find all users in the HR Manager group
-                hr_managers = self.env.ref('hr.group_hr_manager').users
+                hr_managers = self.env['res.users'].search([
+                    ('groups_id', '=', self.env.ref('hr.group_hr_manager').id),
+                    ('active', '=', True),
+                ])
                 if hr_managers:
                     self.env['approval.approver'].create({
                         'user_id': hr_managers[0].id,
@@ -143,6 +150,7 @@ class HrResignation(models.Model):
                 'employee_id': self.employee_id.id,
                 'resignation_id': self.id,
                 'checklist_type_ids': [(6, 0, self.clearance_business_unit_ids.ids)],
+                'company_id': self.company_id.id,
             })
             clearance.sudo()._oncreate_populate_checklist()
             return clearance
