@@ -60,6 +60,7 @@
                     </div>
                     <group>
                         <group>
+                            <field name="requested_by" string="Requested By" readonly="state != 'draft'" groups="hr.group_hr_user"/>
                             <field name="department_id"/>
                             <field name="job_id"/>
                             <field name="manager_id"/>
