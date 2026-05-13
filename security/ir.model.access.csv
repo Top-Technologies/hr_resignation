@@ -1,5 +1,6 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_hr_resignation_user,hr.resignation.user,model_hr_resignation,base.group_user,1,1,1,0
+access_hr_resignation_all,hr.resignation.all,model_hr_resignation,,1,1,1,0                               
 access_hr_resignation_manager,hr.resignation.manager,model_hr_resignation,hr.group_hr_user,1,1,1,1
 access_hr_resignation_admin,hr.resignation.admin,model_hr_resignation,hr.group_hr_manager,1,1,1,1
 access_hr_clearance_user,hr.clearance.user,model_hr_clearance,base.group_user,1,1,1,0
