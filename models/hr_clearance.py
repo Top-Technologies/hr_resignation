@@ -22,6 +22,11 @@ class HrClearance(models.Model):
         ('done', 'Completed')
     ], string='Status', default='draft', tracking=True)
 
+    header_image = fields.Selection([
+        ('header1', 'Header 1'),
+        ('header2', 'Header 2'),
+    ], string='Header Image', default='header1')
+
     def update_state(self):
         for rec in self:
             # Check if all checklist items are completed
