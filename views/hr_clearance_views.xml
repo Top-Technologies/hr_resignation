@@ -100,6 +100,7 @@
                     <group>
                         <field name="resignation_id" readonly="1"/>
                         <field name="checklist_type_ids" widget="many2many_tags" readonly="1"/>
+                        <field name="header_image"/>
                     </group>
                     <notebook>
                         <page string="Checklist">
