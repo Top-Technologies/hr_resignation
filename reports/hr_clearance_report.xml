@@ -34,7 +34,12 @@
                 <t t-call="web.basic_layout">
                     <div class="page">
                         <div class="text-center">
-                            <img src="/hr_resignation/static/img/clearance_header.png" style="max-height: 100px; width: auto;"/>
+                            <t t-if="o.header_image == 'header2'">
+                                <img src="/hr_resignation/static/img/clearance_header2.png" style="max-height: 100px; width: auto;"/>
+                            </t>
+                            <t t-else="">
+                                <img src="/hr_resignation/static/img/clearance_header.png" style="max-height: 100px; width: auto;"/>
+                            </t>
                         </div>
                         <div class="text-center mt-2">
                             <h2>Employee Clearance Checklist Report</h2>
