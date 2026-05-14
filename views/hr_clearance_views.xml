@@ -1,133 +1,125 @@
-<?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Clearance Checklist Type View -->
-    <record id="view_hr_clearance_checklist_type_tree" model="ir.ui.view">
-        <field name="name">hr.clearance.checklist.type.tree</field>
-        <field name="model">hr.clearance.checklist.type</field>
-        <field name="arch" type="xml">
-            <list string="Checklist Types">
-                <field name="business_unit_name"/>
-                <field name="tag_ids" widget="many2many_tags"/>
-            </list>
-        </field>
-    </record>
-
-    <record id="view_hr_clearance_checklist_type_form" model="ir.ui.view">
-        <field name="name">hr.clearance.checklist.type.form</field>
-        <field name="model">hr.clearance.checklist.type</field>
-        <field name="arch" type="xml">
-            <form string="Checklist Type">
-                <sheet>
-                    <group>
-                        <field name="business_unit_name"/>
-                    </group>
-                    <group>
-                        <field name="tag_ids" widget="many2many_tags"/>
-                    </group>
-                    <notebook>
-                        <page string="Checklist Lines">
-                            <field name="line_ids">
-                                <list editable="bottom">
-                                    <field name="sequence" widget="handle"/>
-                                    <field name="name"/>
-                                    <field name="responsible_user_ids" widget="many2many_tags"/>
-                                    <field name="active" optional="hide"/>
-                                </list>
-                            </field>
-                        </page>
-                    </notebook>
-                </sheet>
-            </form>
-        </field>
-    </record>
-
-    <record id="view_hr_clearance_graph" model="ir.ui.view">
-        <field name="name">hr.clearance.graph</field>
-        <field name="model">hr.clearance</field>
-        <field name="arch" type="xml">
-            <graph string="Clearances" type="bar">
-                <field name="state" type="row"/>
-            </graph>
-        </field>
-    </record>
-
-    <record id="view_hr_clearance_pivot" model="ir.ui.view">
-        <field name="name">hr.clearance.pivot</field>
-        <field name="model">hr.clearance</field>
-        <field name="arch" type="xml">
-            <pivot string="Clearances">
-                <field name="employee_id" type="row"/>
-                <field name="state" type="col"/>
-            </pivot>
-        </field>
-    </record>
-
-    <record id="action_hr_clearance_checklist_type" model="ir.actions.act_window">
-        <field name="name">Checklist Types</field>
-        <field name="res_model">hr.clearance.checklist.type</field>
-        <field name="view_mode">list,form</field>
-        <field name="view_id" ref="view_hr_clearance_checklist_type_tree"/>
-    </record>
-
-    <!-- Clearance Views -->
-    <record id="view_hr_clearance_tree" model="ir.ui.view">
-        <field name="name">hr.clearance.tree</field>
-        <field name="model">hr.clearance</field>
-        <field name="arch" type="xml">
-            <list string="Clearances" create="0">
-                <field name="employee_id"/>
-                <field name="resignation_id"/>
-                <field name="state"/>
-            </list>
-        </field>
-    </record>
-
-    <record id="view_hr_clearance_form" model="ir.ui.view">
-        <field name="name">hr.clearance.form</field>
-        <field name="model">hr.clearance</field>
-        <field name="arch" type="xml">
-            <form string="Clearance" create="0">
-                <header>
-                    <button string="Print Report" type="action" name="%(action_report_hr_clearance)d" icon="fa-print"/>
-                    <field name="state" widget="statusbar"/>
-                </header>
-                <sheet>
-                    <div class="oe_title">
-                        <h1>
-                            <field name="employee_id" readonly="1"/>
-                        </h1>
-                    </div>
-                    <group>
-                        <field name="resignation_id" readonly="1"/>
-                        <field name="checklist_type_ids" widget="many2many_tags" readonly="1"/>
-                    </group>
-                    <notebook>
-                        <page string="Checklist">
-                            <field name="checklist_ids">
-                                <list editable="bottom" create="0" delete="0">
-                                    <field name="name" readonly="1"/>
-                                    <field name="responsible_user_id" readonly="1"/>
-                                    <field name="status"/>
-                                    <field name="remarks"/>
-                                    <field name="completion_date" readonly="1"/>
-                                    <button name="action_approve" string="Done" type="object" icon="fa-check" invisible="status == 'completed'"/>
-                                </list>
-                            </field>
-                        </page>
-                    </notebook>
-                </sheet>
-                <chatter/>
-            </form>
-        </field>
-    </record>
-
-    <record id="action_hr_clearance" model="ir.actions.act_window">
-        <field name="name">Clearances</field>
-        <field name="res_model">hr.clearance</field>
-        <field name="view_mode">list,form,graph,pivot</field>
-    </record>
-
-    <menuitem id="menu_hr_clearance_root" name="Clearances" parent="hr.menu_hr_root" sequence="21"/>
-    <menuitem id="menu_hr_clearance_requests" name="Clearance Requests" parent="menu_hr_clearance_root" action="action_hr_clearance" sequence="1"/>
-    <menuitem id="menu_hr_clearance_configuration" name="Checklist Configuration" parent="hr.menu_human_resources_configuration" action="action_hr_clearance_checklist_type" sequence="10"/>
+<!--  Clearance Checklist Type View  -->
+<record id="view_hr_clearance_checklist_type_tree" model="ir.ui.view">
+<field name="name">hr.clearance.checklist.type.tree</field>
+<field name="model">hr.clearance.checklist.type</field>
+<field name="arch" type="xml">
+<list string="Checklist Types">
+<field name="business_unit_name"/>
+<field name="tag_ids" widget="many2many_tags"/>
+</list>
+</field>
+</record>
+<record id="view_hr_clearance_checklist_type_form" model="ir.ui.view">
+<field name="name">hr.clearance.checklist.type.form</field>
+<field name="model">hr.clearance.checklist.type</field>
+<field name="arch" type="xml">
+<form string="Checklist Type">
+<sheet>
+<group>
+<field name="business_unit_name"/>
+</group>
+<group>
+<field name="tag_ids" widget="many2many_tags"/>
+</group>
+<notebook>
+<page string="Checklist Lines">
+<field name="line_ids">
+<list editable="bottom">
+<field name="sequence" widget="handle"/>
+<field name="name"/>
+<field name="responsible_user_ids" widget="many2many_tags"/>
+<field name="active" optional="hide"/>
+</list>
+</field>
+</page>
+</notebook>
+</sheet>
+</form>
+</field>
+</record>
+<record id="view_hr_clearance_graph" model="ir.ui.view">
+<field name="name">hr.clearance.graph</field>
+<field name="model">hr.clearance</field>
+<field name="arch" type="xml">
+<graph string="Clearances" type="bar">
+<field name="state" type="row"/>
+</graph>
+</field>
+</record>
+<record id="view_hr_clearance_pivot" model="ir.ui.view">
+<field name="name">hr.clearance.pivot</field>
+<field name="model">hr.clearance</field>
+<field name="arch" type="xml">
+<pivot string="Clearances">
+<field name="employee_id" type="row"/>
+<field name="state" type="col"/>
+</pivot>
+</field>
+</record>
+<record id="action_hr_clearance_checklist_type" model="ir.actions.act_window">
+<field name="name">Checklist Types</field>
+<field name="res_model">hr.clearance.checklist.type</field>
+<field name="view_mode">list,form</field>
+<field name="view_id" ref="view_hr_clearance_checklist_type_tree"/>
+</record>
+<!--  Clearance Views  -->
+<record id="view_hr_clearance_tree" model="ir.ui.view">
+<field name="name">hr.clearance.tree</field>
+<field name="model">hr.clearance</field>
+<field name="arch" type="xml">
+<list string="Clearances" create="0">
+<field name="employee_id"/>
+<field name="resignation_id"/>
+<field name="state"/>
+</list>
+</field>
+</record>
+<record id="view_hr_clearance_form" model="ir.ui.view">
+<field name="name">hr.clearance.form</field>
+<field name="model">hr.clearance</field>
+<field name="arch" type="xml">
+<form string="Clearance" create="0">
+<header>
+<button string="Print Report" type="action" name="%(action_report_hr_clearance)d" icon="fa-print"/>
+<field name="state" widget="statusbar"/>
+</header>
+<sheet>
+<div class="oe_title">
+<h1>
+<field name="employee_id" readonly="1"/>
+</h1>
+</div>
+<group>
+<field name="resignation_id" readonly="1"/>
+<field name="checklist_type_ids" widget="many2many_tags" readonly="1"/>
+<field name="header_image"/>
+</group>
+<notebook>
+<page string="Checklist">
+<field name="checklist_ids">
+<list editable="bottom" create="0" delete="0">
+<field name="name" readonly="1"/>
+<field name="responsible_user_id" readonly="1"/>
+<field name="status"/>
+<field name="remarks"/>
+<field name="completion_date" readonly="1"/>
+<button name="action_approve" string="Done" type="object" icon="fa-check" invisible="status == 'completed'"/>
+</list>
+</field>
+</page>
+</notebook>
+</sheet>
+<chatter/>
+</form>
+</field>
+</record>
+<record id="action_hr_clearance" model="ir.actions.act_window">
+<field name="name">Clearances</field>
+<field name="res_model">hr.clearance</field>
+<field name="view_mode">list,form,graph,pivot</field>
+</record>
+<menuitem id="menu_hr_clearance_root" name="Clearances" parent="hr.menu_hr_root" sequence="21"/>
+<menuitem id="menu_hr_clearance_requests" name="Clearance Requests" parent="menu_hr_clearance_root" action="action_hr_clearance" sequence="1"/>
+<menuitem id="menu_hr_clearance_configuration" name="Checklist Configuration" parent="hr.menu_human_resources_configuration" action="action_hr_clearance_checklist_type" sequence="10"/>
 </odoo>
