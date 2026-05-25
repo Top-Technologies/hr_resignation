@@ -77,14 +77,14 @@ class HrResignation(models.Model):
                 'res_model': self._name,
                 'res_id': self.id,
             }
-            request = self.env['approval.request'].create(request_vals)
+            request = self.env['approval.request'].sudo().create(request_vals)
 
             # If the employee has a manager and we want to ensure they are added
             if self.manager_id and self.manager_id.user_id:
                 # Check if the manager is already an approver (Odoo might add them automatically via category)
                 existing_approver = request.approver_ids.filtered(lambda a: a.user_id == self.manager_id.user_id)
                 if not existing_approver:
-                    self.env['approval.approver'].create({
+                    self.env['approval.approver'].sudo().create({
                         'user_id': self.manager_id.user_id.id,
                         'request_id': request.id,
                         'status': 'new',
@@ -94,12 +94,12 @@ class HrResignation(models.Model):
             # Fallback: If no approver was added (e.g., employee has no manager), add an HR Manager
             # Search across ALL companies for HR managers
             if not request.approver_ids:
-                hr_managers = self.env['res.users'].search([
+                hr_managers = self.env['res.users'].sudo().search([
                     ('groups_id', '=', self.env.ref('hr.group_hr_manager').id),
                     ('active', '=', True),
                 ])
                 if hr_managers:
-                    self.env['approval.approver'].create({
+                    self.env['approval.approver'].sudo().create({
                         'user_id': hr_managers[0].id,
                         'request_id': request.id,
                         'status': 'new',
@@ -107,14 +107,14 @@ class HrResignation(models.Model):
                     })
                 else:
                     # Ultimate fallback to Administrator if no HR Managers are configured
-                    self.env['approval.approver'].create({
+                    self.env['approval.approver'].sudo().create({
                         'user_id': self.env.ref('base.user_admin').id,
                         'request_id': request.id,
                         'status': 'new',
                         'required': True,
                     })
 
-            request.action_confirm() 
+            request.sudo().action_confirm()
             self.write({'state': 'submitted', 'approval_request_id': request.id})
         else:
              # Fallback if approval module config missing, though we want to enforce it.
