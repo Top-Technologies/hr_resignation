@@ -3,6 +3,7 @@ access_hr_resignation_user,hr.resignation.user,model_hr_resignation,base.group_u
 access_hr_resignation_all,hr.resignation.all,model_hr_resignation,base.group_user,1,1,1,0
 access_hr_resignation_manager,hr.resignation.manager,model_hr_resignation,hr.group_hr_user,1,1,1,1
 access_hr_resignation_admin,hr.resignation.admin,model_hr_resignation,hr.group_hr_manager,1,1,1,1
+access_hr_resignation_custom_manager,hr.resignation.custom.manager,model_hr_resignation,group_resignation_manager,1,1,1,1
 access_hr_clearance_user,hr.clearance.user,model_hr_clearance,base.group_user,1,1,1,0
 access_hr_clearance_manager,hr.clearance.manager,model_hr_clearance,hr.group_hr_manager,1,1,1,1
 access_hr_clearance_line_user,hr.clearance.line.user,model_hr_clearance_line,base.group_user,1,1,1,0
